@@ -22,3 +22,17 @@ def test_item():
     assert item1.name == "Смартфон"
     assert isinstance(item1.price, int)
     assert isinstance(Item.all, list)
+
+
+def test_instantiate_from_csv():
+    Item.instantiate_from_csv()
+    assert len(Item.all) >= 5
+    item1 = Item.all[0]
+    print(item1)
+    assert item1.name == 'Смартфон'
+
+
+def test_string_to_number():
+    assert Item.string_to_number('5') == 5
+    assert Item.string_to_number('5.0') == 5
+    assert Item.string_to_number('5.5') == 5
