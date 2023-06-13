@@ -1,5 +1,6 @@
 import os
 import csv
+import inspect
 
 
 class Item:
@@ -8,10 +9,6 @@ class Item:
     """
     pay_rate = 1.0
     all = []
-    # при задании такого пути, модули отрабатывают корректно,
-    # но при запуске в терминале команды pytest --cov, вылетает ошибка, что файл не найден
-    # file_csv = os.path.join(os.path.abspath('..'), 'src', 'items.csv')
-    file_csv = 'C:\\Users\\dshiyan\\PycharmProjects\\electronics-shop-project\\src\\items.csv'
 
     def __init__(self, name, price, quantity) -> None:
         """
@@ -20,10 +17,18 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.__name = name
+        self.name = name
         self.price = price
         self.quantity = quantity
         Item.all += [self]
+
+    def __repr__(self):
+        """Отображает информацию об объекте класса в режиме отладки"""
+        return f"{self.__class__.__name__}({str(self)}, {self.price}, {self.quantity})"
+
+    def __str__(self):
+        """Отображает информацию об объекте класса для пользователей"""
+        return f"{self.name}"
 
     @property
     def name(self):
@@ -33,9 +38,10 @@ class Item:
     @name.setter
     def name(self, name_string):
         """Сеттер для __name"""
-        while len(name_string) <= 10:
+        if len(name_string) <= 10:
             self.__name = name_string
-            break
+        else:
+            print("Exception: Длина наименования товара превышает 10 символов.")
 
     def calculate_total_price(self) -> float:
         """
@@ -55,7 +61,9 @@ class Item:
     @classmethod
     def instantiate_from_csv(cls):
         """Инициализируюет экземпляры класса `Item` данными из файла _src/items.csv_"""
-        with open(Item.file_csv, newline='') as csvfile:
+        class_file = inspect.getfile(cls)  # узнаем название файла содержащего класс
+        path_to_dir = os.path.dirname(class_file)  # ищем абсолютный путь до файла
+        with open(f'{path_to_dir}/items.csv', encoding='pt154') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 __name = row['name']
