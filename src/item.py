@@ -81,3 +81,10 @@ class Item:
         else:
             number = int(string)
             return number
+
+    def __add__(self, other):
+        """Складывает количество подписчиков"""
+        if isinstance(other, Item):
+            return int(self.quantity) + int(other.quantity)
+        else:
+            print('Недопустимый для сложения объект')
