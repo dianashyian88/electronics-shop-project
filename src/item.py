@@ -83,7 +83,7 @@ class Item:
             return number
 
     def __add__(self, other):
-        """Складывает количество подписчиков"""
+        """Складывает количество товаров"""
         if isinstance(other, Item):
             return int(self.quantity) + int(other.quantity)
         else:
