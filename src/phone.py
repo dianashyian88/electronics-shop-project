@@ -21,7 +21,7 @@ class Phone(Item):
 
     @number_of_sim.setter
     def number_of_sim(self, count_card):
-        """Сеттер для __name"""
+        """Сеттер для __number_of_sim"""
         if count_card > 0 and isinstance(count_card, int):
             self.__number_of_sim = count_card
         else:
