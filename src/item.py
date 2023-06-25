@@ -60,18 +60,26 @@ class Item:
         return self.price
 
     @classmethod
-    def instantiate_from_csv(cls):
+    def instantiate_from_csv(cls, name_file='items_1.csv'):
         """Инициализируюет экземпляры класса `Item` данными из файла _src/items.csv_"""
         class_file = inspect.getfile(cls)  # узнаем название файла содержащего класс
         path_to_dir = os.path.dirname(class_file)  # ищем абсолютный путь до файла
-        with open(f'{path_to_dir}/items.csv', encoding='pt154') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                __name = row['name']
-                price = row['price']
-                quantity = row['quantity']
-                Item.all += [row]
-                print(__name, price, quantity)
+        try:
+            with open(f'{path_to_dir}/{name_file}', encoding='pt154') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    if len(row) < 3:
+                        raise InstantiateCSVError
+                    else:
+                        __name = row['name']
+                        price = row['price']
+                        quantity = row['quantity']
+                        Item.all += [row]
+                        print(__name, price, quantity)
+        except FileNotFoundError:
+            print(f'Отсутствует файл {name_file}')
+        except InstantiateCSVError:
+            print(f'Файл {name_file} поврежден.')
 
     @staticmethod
     def string_to_number(string):
@@ -89,3 +97,13 @@ class Item:
             return int(self.quantity) + int(other.quantity)
         else:
             print('Недопустимый для сложения объект')
+
+
+class InstantiateCSVError(Exception):
+    """Класс исключения в случае, если файл items_1.csv поврежден"""
+
+    def __init__(self, *args):
+        self.message = args[0] if args else 'Файл items_1.csv поврежден.'
+
+    def __str__(self):
+        return self.message

@@ -1,5 +1,6 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 from src.item import Item
+import pytest
 
 
 def test_calculate_total_price():
@@ -25,6 +26,8 @@ def test_item():
 
 
 def test_instantiate_from_csv():
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv('item.csv')
     Item.instantiate_from_csv()
     assert len(Item.all) >= 5
     item1 = Item.all[0]
