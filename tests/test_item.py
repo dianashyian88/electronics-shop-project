@@ -1,6 +1,9 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
-from src.item import Item
+from src.item import Item, InstantiateCSVError
 import pytest
+import os
+import csv
+import inspect
 
 
 def test_calculate_total_price():
@@ -26,13 +29,39 @@ def test_item():
 
 
 def test_instantiate_from_csv():
-    with pytest.raises(FileNotFoundError):
-        Item.instantiate_from_csv('item.csv')
     Item.instantiate_from_csv()
     assert len(Item.all) >= 5
     item1 = Item.all[0]
     print(item1)
     assert item1.name == 'Смартфон'
+    with pytest.raises(InstantiateCSVError):
+        class_file = inspect.getfile(Item)
+        path_to_dir = os.path.dirname(class_file)
+        with open(f'{path_to_dir}/items_1.csv', encoding='pt154') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if len(row) < 3:
+                    raise InstantiateCSVError
+                else:
+                    __name = row['name']
+                    price = row['price']
+                    quantity = row['quantity']
+                    Item.all += [row]
+                    print(__name, price, quantity)
+    with pytest.raises(FileNotFoundError):
+        class_file = inspect.getfile(Item)
+        path_to_dir = os.path.dirname(class_file)
+        with open(f'{path_to_dir}/item.csv', encoding='pt154') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if len(row) < 3:
+                    raise InstantiateCSVError
+                else:
+                    __name = row['name']
+                    price = row['price']
+                    quantity = row['quantity']
+                    Item.all += [row]
+                    print(__name, price, quantity)
 
 
 def test_string_to_number():

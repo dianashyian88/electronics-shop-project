@@ -60,7 +60,7 @@ class Item:
         return self.price
 
     @classmethod
-    def instantiate_from_csv(cls, name_file='items_1.csv'):
+    def instantiate_from_csv(cls, name_file='items.csv'):
         """Инициализируюет экземпляры класса `Item` данными из файла _src/items.csv_"""
         class_file = inspect.getfile(cls)  # узнаем название файла содержащего класс
         path_to_dir = os.path.dirname(class_file)  # ищем абсолютный путь до файла
@@ -103,7 +103,7 @@ class InstantiateCSVError(Exception):
     """Класс исключения в случае, если файл items_1.csv поврежден"""
 
     def __init__(self, *args):
-        self.message = args[0] if args else 'Файл items_1.csv поврежден.'
+        self.message = args[0] if args else 'Файл поврежден.'
 
     def __str__(self):
         return self.message
